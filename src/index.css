@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #A3E635; /* lime-green active pill */
+  --color-sidebar: #1E232A; /* dark global sidebar */
+  --font-inter: 'Inter', sans-serif;
+  --font-outfit: 'Outfit', sans-serif;
+}
+
+body {
+  font-family: var(--font-inter);
+  background-color: #0B0D11; /* slightly darker background than sidebar */
+  color: #e5e7eb;
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
