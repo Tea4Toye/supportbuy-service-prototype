@@ -1,11 +1,17 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, Navigate } from "react-router-dom";
 import ChatDrawer from "../components/ChatDrawer";
 import PdfPassModal from "../components/PdfPassModal";
 
 export default function BookingConfirmed() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
+  
+  const location = useLocation();
+  const service = location.state?.service;
+
+  if (!service) return <Navigate to="/services" />;
+
   return (
     <div className="max-w-6xl mx-auto pb-10">
       <div className="flex flex-col md:flex-row gap-8">
@@ -29,10 +35,10 @@ export default function BookingConfirmed() {
 
             {/* Booking Details Card */}
             <div className="border border-gray-100 rounded-2xl p-6 mb-6">
-              <h2 className="text-lg font-outfit font-bold text-[#1E232A] mb-4">3 Bedroom Shortlet Apartment</h2>
+              <h2 className="text-lg font-outfit font-bold text-[#1E232A] mb-4">{service.title}</h2>
               <div className="flex items-center gap-2 mb-6">
                 <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=800&auto=format&fit=crop" alt="Avatar" className="w-6 h-6 rounded-full object-cover" />
-                <span className="text-sm font-medium text-gray-700">Pixel Home</span>
+                <span className="text-sm font-medium text-gray-700">{service.merchant}</span>
               </div>
               
               <div className="flex items-center gap-4 text-sm text-gray-600 mb-6 border-b border-gray-100 pb-6">
@@ -49,9 +55,8 @@ export default function BookingConfirmed() {
               <div className="flex justify-between items-center">
                 <div>
                    <div className="text-gray-500 text-sm mb-0.5">Total Paid</div>
-                   <div className="text-[11px] text-gray-400">(Includes ₦70,000 Refundable Caution Deposit)</div>
                 </div>
-                <span className="font-bold text-green-700 text-lg">₦ 657,100</span>
+                <span className="font-bold text-green-700 text-lg">{service.price}</span>
               </div>
             </div>
 
@@ -92,14 +97,14 @@ export default function BookingConfirmed() {
             <div className="flex justify-between items-start gap-4">
               <div className="flex gap-4">
                 <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200 shrink-0">
-                  <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=800&auto=format&fit=crop" alt="Living Room" className="w-full h-full object-cover" />
+                  <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
                 </div>
                 <div>
-                  <h3 className="font-medium text-[#1E232A] text-sm mb-1.5">3 Bedroom Shortlet Apartment</h3>
-                  <p className="text-xs text-gray-500">Pixel Home • 3 Days</p>
+                  <h3 className="font-medium text-[#1E232A] text-sm mb-1.5">{service.title}</h3>
+                  <p className="text-xs text-gray-500">{service.merchant} • 1 {service.unit}</p>
                 </div>
               </div>
-              <div className="font-semibold text-[#1E232A] text-sm">₦570,000</div>
+              <div className="font-semibold text-[#1E232A] text-sm">{service.price}</div>
             </div>
           </div>
 
@@ -150,7 +155,7 @@ export default function BookingConfirmed() {
       <ChatDrawer 
         isOpen={isChatOpen}
         onClose={() => setIsChatOpen(false)}
-        hostName="Pixel Home"
+        hostName={service.merchant}
       />
       <PdfPassModal 
         isOpen={isPdfModalOpen}

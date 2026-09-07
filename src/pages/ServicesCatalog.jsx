@@ -35,57 +35,112 @@ const services = [
   {
     id: 1,
     title: "3 Bedroom Shortlet Apartment",
-    provider: "Pixel Home",
+    merchant: "Pixel Home",
     rating: 4.9,
     reviews: 124,
     price: "₦190,000",
-    unit: "per day",
-    imgUrl: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=600&auto=format&fit=crop",
-    link: "/services/3-bedroom-shortlet"
+    basePrice: 190000,
+    unit: "/Night",
+    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=600&auto=format&fit=crop"
   },
   {
     id: 2,
     title: "Home Cleaning",
-    provider: "Sparkle Maids",
+    merchant: "Sparkle Maids",
     rating: 4.7,
     reviews: 89,
     price: "₦15,000",
-    unit: "per session",
-    imgUrl: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=600&auto=format&fit=crop",
-    link: "/services/home-cleaning"
+    basePrice: 15000,
+    unit: "/Session",
+    image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=600&auto=format&fit=crop"
   },
   {
     id: 3,
     title: "Web Developer",
-    provider: "Tech Ninjas",
+    merchant: "Tech Ninjas",
     rating: 5.0,
     reviews: 42,
     price: "₦250,000",
-    unit: "per project",
-    imgUrl: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=600&auto=format&fit=crop",
-    link: "/services/web-developer"
+    basePrice: 250000,
+    unit: "/Hour",
+    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=600&auto=format&fit=crop"
   },
   {
     id: 4,
     title: "Bridal Make-Up",
-    provider: "Glam by Sarah",
+    merchant: "Glam by Sarah",
     rating: 4.8,
     reviews: 210,
     price: "₦85,000",
-    unit: "per event",
-    imgUrl: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=600&auto=format&fit=crop",
-    link: "/services/bridal-makeup"
+    basePrice: 85000,
+    unit: "/Session",
+    image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=600&auto=format&fit=crop"
   },
   {
     id: 5,
     title: "Transport Goods",
-    provider: "Logistics Pro",
+    merchant: "Logistics Pro",
     rating: 4.6,
     reviews: 315,
     price: "₦45,000",
-    unit: "per trip",
-    imgUrl: "https://images.unsplash.com/photo-1586528116311-ad8ed7c50800?q=80&w=600&auto=format&fit=crop",
-    link: "/services/transport-goods"
+    basePrice: 45000,
+    unit: "/Trip",
+    image: "https://images.unsplash.com/photo-1586528116311-ad8ed7c50800?q=80&w=600&auto=format&fit=crop"
+  },
+  {
+    id: 6,
+    title: "Mobile Car Detailing",
+    merchant: "AutoShine",
+    rating: 4.8,
+    reviews: 142,
+    price: "₦35,000",
+    basePrice: 35000,
+    unit: "/Session",
+    image: "https://images.unsplash.com/photo-1601362840469-51e4d8d58785?q=80&w=600&auto=format&fit=crop"
+  },
+  {
+    id: 7,
+    title: "Professional Headshot Photography",
+    merchant: "LensCraft",
+    rating: 4.9,
+    reviews: 78,
+    price: "₦50,000",
+    basePrice: 50000,
+    unit: "/Hour",
+    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=600&auto=format&fit=crop"
+  },
+  {
+    id: 8,
+    title: "Dog Walking",
+    merchant: "PetPals",
+    rating: 4.7,
+    reviews: 204,
+    price: "₦5,000",
+    basePrice: 5000,
+    unit: "/Session",
+    image: "https://images.unsplash.com/photo-1536551817105-950293dbbaeb?q=80&w=600&auto=format&fit=crop"
+  },
+  {
+    id: 9,
+    title: "Furniture Assembly",
+    merchant: "FixItRight",
+    rating: 4.6,
+    reviews: 312,
+    price: "₦15,000",
+    basePrice: 15000,
+    unit: "/Item",
+    image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=600&auto=format&fit=crop"
+  },
+  {
+    id: 10,
+    title: "Personal Trainer",
+    merchant: "FitPro",
+    rating: 5.0,
+    reviews: 95,
+    price: "₦20,000",
+    basePrice: 20000,
+    unit: "/Hour",
+    image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=600&auto=format&fit=crop"
   }
 ];
 
@@ -165,7 +220,7 @@ export default function ServicesCatalog() {
             {/* Image */}
             <div className="aspect-[4/3] w-full relative overflow-hidden bg-gray-100">
               <img 
-                src={service.imgUrl} 
+                src={service.image} 
                 alt={service.title} 
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
@@ -184,14 +239,14 @@ export default function ServicesCatalog() {
                 </div>
               </div>
               
-              <p className="text-gray-500 text-sm mb-4">by {service.provider}</p>
+              <p className="text-gray-500 text-sm mb-4">by {service.merchant}</p>
 
               <div className="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
                 <div>
                   <span className="font-bold text-[#1E232A] text-lg">{service.price}</span>
                   <span className="text-gray-500 text-xs ml-1">{service.unit}</span>
                 </div>
-                <Link to={service.link} className="bg-primary hover:bg-[#b5e032] text-[#1E232A] font-medium px-4 py-2 rounded-xl text-sm transition-colors">
+                <Link to={`/services/${service.id}`} state={{ service }} className="bg-primary hover:bg-[#b5e032] text-[#1E232A] font-medium px-4 py-2 rounded-xl text-sm transition-colors">
                   Book Now
                 </Link>
               </div>

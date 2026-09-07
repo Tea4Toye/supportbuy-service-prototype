@@ -8,6 +8,7 @@ import BookingConfirmed from "./pages/BookingConfirmed";
 import MyOrders from "./pages/MyOrders";
 import ActiveBookingDetail from "./pages/ActiveBookingDetail";
 import CompletedBookingDetail from "./pages/CompletedBookingDetail";
+import CreateServiceCampaign from "./pages/CreateServiceCampaign";
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Navigate to="/services" replace />} />
           <Route path="services" element={<ServicesCatalog />} />
-          <Route path="services/3-bedroom-shortlet" element={<ServiceDetail />} />
+          <Route path="services/:id" element={<ServiceDetail />} />
           <Route path="booking-summary" element={<BookingSummary />} />
           <Route path="checkout" element={<Checkout />} />
           <Route path="booking-confirmed" element={<BookingConfirmed />} />
@@ -24,6 +25,7 @@ function App() {
           <Route path="booking/completed" element={<CompletedBookingDetail />} />
           
           <Route path="campaigns" element={<div><h1 className="text-2xl font-outfit font-semibold mb-4 text-[#1E232A]">My Campaigns</h1></div>} />
+          <Route path="campaigns/create/service" element={<CreateServiceCampaign />} />
           <Route path="shop" element={<div><h1 className="text-2xl font-outfit font-semibold mb-4 text-[#1E232A]">Shop</h1></div>} />
           <Route path="feed" element={<div><h1 className="text-2xl font-outfit font-semibold mb-4 text-[#1E232A]">Feed</h1></div>} />
           <Route path="profile" element={<div><h1 className="text-2xl font-outfit font-semibold mb-4 text-[#1E232A]">My Profile</h1></div>} />

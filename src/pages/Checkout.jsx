@@ -1,11 +1,20 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, Navigate } from "react-router-dom";
 
 export default function Checkout() {
+  const location = useLocation();
+  const service = location.state?.service;
+  const bookingDetails = location.state?.bookingDetails;
+
+  const durationStr = bookingDetails?.durationText || "1 Unit";
+  const totalPrice = bookingDetails?.formattedTotal || service?.price;
+
+  if (!service) return <Navigate to="/services" />;
+
   return (
     <div className="max-w-6xl mx-auto pb-10">
       {/* Header & Back */}
       <div className="flex items-center gap-4 mb-8">
-        <Link to="/booking-summary" className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm hover:bg-gray-50 transition-colors">
+        <Link to="/booking-summary" state={{ service, bookingDetails }} className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm hover:bg-gray-50 transition-colors">
           <span className="material-symbols-outlined text-gray-600">arrow_back</span>
         </Link>
         <h1 className="text-2xl font-outfit font-bold text-[#1E232A]">Checkout</h1>
@@ -124,39 +133,31 @@ export default function Checkout() {
             {/* Small item preview */}
             <div className="flex gap-4 mb-6 pb-6 border-b border-gray-100">
               <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200 shrink-0">
-                <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=800&auto=format&fit=crop" alt="Living Room" className="w-full h-full object-cover" />
+                <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
               </div>
               <div>
-                <h3 className="font-medium text-[#1E232A] text-sm mb-1">3 Bedroom Shortlet Apartment</h3>
-                <p className="text-xs text-gray-500">Pixel Home • 3 Days</p>
+                <h3 className="font-medium text-[#1E232A] text-sm mb-1">{service.title}</h3>
+                <p className="text-xs text-gray-500">{service.merchant} • {durationStr}</p>
               </div>
             </div>
 
             <div className="space-y-4 mb-6 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-500">Accommodation:</span>
-                <span className="font-semibold text-[#1E232A]">₦570,000</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-500">Caution Fee:</span>
-                <span className="font-semibold text-[#1E232A]">₦70,000</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-500">Service Charge (3%):</span>
-                <span className="font-semibold text-[#1E232A]">₦17,100</span>
+                <span className="text-gray-500">Service:</span>
+                <span className="font-semibold text-[#1E232A]">{totalPrice}</span>
               </div>
             </div>
 
             <div className="border-t border-gray-100 pt-4 mb-8">
               <div className="flex justify-between items-center">
                 <span className="font-bold text-[#1E232A]">Total</span>
-                <span className="text-xl font-bold text-green-700">₦657,100</span>
+                <span className="text-xl font-bold text-green-700">{totalPrice}</span>
               </div>
             </div>
 
-            <Link to="/booking-confirmed" className="w-full bg-primary hover:bg-[#b5e032] text-[#1E232A] font-medium py-3.5 rounded-xl flex items-center justify-center gap-2 transition-colors">
+            <Link to="/booking-confirmed" state={{ service, bookingDetails }} className="w-full bg-primary hover:bg-[#b5e032] text-[#1E232A] font-medium py-3.5 rounded-xl flex items-center justify-center gap-2 transition-colors">
               <span className="material-symbols-outlined text-[20px]">shopping_cart</span>
-              Pay & Authorize ₦657,100
+              Pay & Authorize {totalPrice}
             </Link>
             <p className="text-center text-xs text-gray-400 mt-4 flex items-center justify-center gap-1">
               <span className="material-symbols-outlined text-[14px]">shield</span>
