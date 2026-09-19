@@ -6,13 +6,13 @@ import BookingSummary from "./pages/BookingSummary";
 import Checkout from "./pages/Checkout";
 import BookingConfirmed from "./pages/BookingConfirmed";
 import MyOrders from "./pages/MyOrders";
-import ActiveBookingDetail from "./pages/ActiveBookingDetail";
-import CompletedBookingDetail from "./pages/CompletedBookingDetail";
+import BookingDetail from "./pages/BookingDetail";
+import { BookingProvider } from "./bookings/BookingProvider";
 import CreateServiceCampaign from "./pages/CreateServiceCampaign";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BookingProvider><BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Navigate to="/services" replace />} />
@@ -21,8 +21,9 @@ function App() {
           <Route path="booking-summary" element={<BookingSummary />} />
           <Route path="checkout" element={<Checkout />} />
           <Route path="booking-confirmed" element={<BookingConfirmed />} />
-          <Route path="booking/active" element={<ActiveBookingDetail />} />
-          <Route path="booking/completed" element={<CompletedBookingDetail />} />
+          <Route path="booking/active" element={<Navigate to="/booking/demo-stay-active" replace />} />
+          <Route path="booking/completed" element={<Navigate to="/booking/demo-stay-completed" replace />} />
+          <Route path="booking/:bookingId" element={<BookingDetail />} />
           
           <Route path="campaigns" element={<div><h1 className="text-2xl font-outfit font-semibold mb-4 text-[#1E232A]">My Campaigns</h1></div>} />
           <Route path="campaigns/create/service" element={<CreateServiceCampaign />} />
@@ -33,9 +34,10 @@ function App() {
           <Route path="circles" element={<div><h1 className="text-2xl font-outfit font-semibold mb-4 text-[#1E232A]">My Circles</h1></div>} />
           <Route path="orders" element={<MyOrders />} />
           <Route path="settings" element={<div><h1 className="text-2xl font-outfit font-semibold mb-4 text-[#1E232A]">Settings</h1></div>} />
+          <Route path="*" element={<Navigate to="/services" replace />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </BrowserRouter></BookingProvider>
   );
 }
 

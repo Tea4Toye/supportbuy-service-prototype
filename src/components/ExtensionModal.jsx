@@ -1,78 +1,61 @@
-import React, { useState } from 'react';
+import { useRef, useState } from 'react';
+import Modal from './Modal';
+import { useBookings } from '../bookings/BookingProvider';
+import { addDays, calculatePrice, formatDate, formatMoney } from '../bookings/bookingModel';
+import { Icon } from '../bookings/BookingUI';
+import { primaryButton } from '../bookings/bookingPresentation';
 
-const ExtensionModal = ({ isOpen, onClose }) => {
+function StayExtension({ booking, onClose }) {
+  const { updateBooking } = useBookings();
   const [nights, setNights] = useState(1);
-  const nightlyRate = 190000;
-  
-  if (!isOpen) return null;
-
-  const subtotal = nightlyRate * nights;
-  const fee = subtotal * 0.03;
-  const total = subtotal + fee;
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden flex flex-col">
-        {/* Header */}
-        <div className="flex justify-between items-center p-6 border-b border-gray-100">
-          <h3 className="font-outfit font-semibold text-xl text-[#1E232A]">Extend Your Stay</h3>
-          <button 
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <span className="material-symbols-outlined">close</span>
-          </button>
+  const [error, setError] = useState('');
+  const [paying, setPaying] = useState(false);
+  const submitted = useRef(false);
+  const checkout = addDays(booking.selection.endDate, nights);
+  const nextPrice = calculatePrice(booking.service, { ...booking.selection, endDate: checkout });
+  const subtotal = nextPrice.subtotal - booking.price.subtotal;
+  const fee = nextPrice.serviceFee - booking.price.serviceFee;
+  const charge = nextPrice.total - booking.price.total;
+  function extend() {
+    if (submitted.current) return;
+    submitted.current = true;
+    setPaying(true);
+    try {
+      updateBooking(booking.id, { type: 'extend_stay', nights });
+      onClose();
+    } catch (cause) {
+      submitted.current = false;
+      setPaying(false);
+      setError(cause.message);
+    }
+  }
+  return <Modal title="Extend your stay" onClose={onClose}>
+    <div className="p-5 md:p-6 space-y-6">
+      <div><p className="font-medium">{booking.service.title}</p><p className="text-sm text-gray-500">{booking.reference}</p></div>
+      <div>
+        <p className="text-sm font-medium mb-3">How many nights to add?</p>
+        <div className="flex items-center gap-4">
+          <button type="button" aria-label="Remove one night" disabled={nights <= 1 || paying} onClick={() => setNights(value => value - 1)} className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 disabled:opacity-50"><Icon>remove</Icon></button>
+          <output aria-label="Extra nights" className="font-outfit font-semibold text-xl w-8 text-center">{nights}</output>
+          <button type="button" aria-label="Add one night" disabled={nights >= 3 || paying} onClick={() => setNights(value => value + 1)} className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 disabled:opacity-50"><Icon>add</Icon></button>
         </div>
-
-        {/* Content */}
-        <div className="p-6">
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">How many nights to add?</label>
-            <div className="flex items-center gap-4">
-              <button 
-                onClick={() => setNights(Math.max(1, nights - 1))}
-                className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-[#1E232A] hover:bg-gray-50 disabled:opacity-50"
-                disabled={nights <= 1}
-              >
-                <span className="material-symbols-outlined text-sm">remove</span>
-              </button>
-              <span className="font-outfit font-semibold text-xl w-8 text-center">{nights}</span>
-              <button 
-                onClick={() => setNights(Math.min(3, nights + 1))}
-                className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-[#1E232A] hover:bg-gray-50 disabled:opacity-50"
-                disabled={nights >= 3}
-              >
-                <span className="material-symbols-outlined text-sm">add</span>
-              </button>
-            </div>
-            <p className="text-xs text-gray-500 mt-2">Maximum 3 nights extension per request.</p>
-          </div>
-
-          <div className="bg-gray-50 rounded-xl p-4 space-y-3 mb-6">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Extension ({nights} {nights === 1 ? 'night' : 'nights'})</span>
-              <span className="font-medium text-[#1E232A]">₦{subtotal.toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Service Fee (3%)</span>
-              <span className="font-medium text-[#1E232A]">₦{fee.toLocaleString()}</span>
-            </div>
-            <div className="pt-3 border-t border-gray-200 flex justify-between">
-              <span className="font-semibold text-[#1E232A]">Total to Pay</span>
-              <span className="font-bold text-[#2F9E44]">₦{total.toLocaleString()}</span>
-            </div>
-          </div>
-
-          <button 
-            onClick={onClose}
-            className="w-full bg-[#1E232A] hover:bg-gray-800 text-white font-semibold py-4 rounded-xl transition-colors font-outfit"
-          >
-            Pay ₦{total.toLocaleString()} to Extend
-          </button>
-        </div>
+        <p className="text-xs text-gray-500 mt-3">Maximum 3 nights per request.</p>
       </div>
+      <div className="bg-gray-50 rounded-xl p-4 space-y-3 text-sm">
+        <p>Current checkout: <strong>{formatDate(booking.selection.endDate)}</strong></p>
+        <p>New checkout: <strong>{formatDate(checkout)}</strong></p>
+        <div className="flex justify-between gap-3 border-t border-gray-200 pt-3"><span>{formatMoney(booking.service.rate)} × {nights} {nights === 1 ? 'night' : 'nights'}</span><span>{formatMoney(subtotal)}</span></div>
+        {fee > 0 && <div className="flex justify-between gap-3"><span>Service charge</span><span>{formatMoney(fee)}</span></div>}
+        <p className="text-gray-500 text-xs">Your existing caution deposit carries over. No second deposit is charged.</p>
+        <div className="border-t border-gray-200 pt-3 flex justify-between gap-3 font-semibold"><span>Additional payment</span><span className="text-green-700">{formatMoney(charge)}</span></div>
+      </div>
+      {error && <p role="alert" className="text-red-700 text-sm">{error}</p>}
+      <button type="button" disabled={paying} className={primaryButton + ' w-full'} onClick={extend}>{paying ? 'Applying extension...' : 'Simulate payment · ' + formatMoney(charge)}</button>
     </div>
-  );
-};
+  </Modal>;
+}
 
-export default ExtensionModal;
+export default function ExtensionModal({ booking, isOpen, onClose }) {
+  if (!isOpen || !booking || booking.lifecycle !== 'stay') return null;
+  return <StayExtension key={booking.id} booking={booking} onClose={onClose} />;
+}

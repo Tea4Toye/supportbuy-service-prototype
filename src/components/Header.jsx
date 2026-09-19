@@ -1,7 +1,7 @@
 export default function Header() {
   return (
-    <header className="h-[88px] border-b border-gray-200 flex items-center justify-between px-8 bg-white sticky top-0 z-10 w-full shrink-0">
-      <div className="flex-1 flex items-center">
+    <header className="h-[88px] border-b border-gray-200 flex items-center justify-between gap-3 px-4 md:px-8 bg-white sticky top-0 z-10 w-full shrink-0">
+      <div className="flex-1 min-w-0 flex items-center">
         <div className="relative w-full max-w-[500px]">
           <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-[20px]">search</span>
           <input
@@ -12,7 +12,7 @@ export default function Header() {
         </div>
       </div>
 
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-3 md:gap-6 shrink-0">
         <div className="flex items-center gap-2 bg-primary rounded-full px-4 py-2">
           <div className="bg-white rounded-full w-6 h-6 flex items-center justify-center">
             <span className="material-symbols-outlined text-primary text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>account_balance_wallet</span>
@@ -20,7 +20,7 @@ export default function Header() {
           <span className="text-[15px] font-bold text-[#1E232A] font-outfit">₦1.2K</span>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="hidden lg:flex items-center gap-3">
           <button className="relative text-gray-600 hover:text-[#1E232A] transition-colors w-11 h-11 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center">
             <span className="material-symbols-outlined text-[22px]">shopping_bag</span>
             <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-[#1E232A] text-white text-[11px] font-bold rounded-full flex items-center justify-center">2</span>
@@ -32,7 +32,7 @@ export default function Header() {
           </button>
         </div>
 
-        <button className="bg-primary hover:bg-[#b5e032] text-[#1E232A] font-medium font-inter px-5 py-3 rounded-xl transition-colors flex items-center gap-2 text-[15px]">
+        <button className="bg-primary hover:bg-[#b5e032] text-[#1E232A] font-medium font-inter px-5 py-3 rounded-xl transition-colors hidden xl:flex items-center gap-2 text-[15px]">
           <span className="material-symbols-outlined text-[18px]">favorite</span>
           Start Campaign
         </button>

@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { services } from "../data/services";
+import { formatMoney } from "../bookings/bookingModel";
+import { unitLabels } from "../bookings/bookingPresentation";
 
 // Mock Data
 const promotionalCards = [
@@ -29,120 +32,7 @@ const promotionalCards = [
   },
 ];
 
-const categories = ["All", "Home", "Events", "Tech", "Automotive", "Beauty", "Transport"];
-
-const services = [
-  {
-    id: 1,
-    title: "3 Bedroom Shortlet Apartment",
-    merchant: "Pixel Home",
-    rating: 4.9,
-    reviews: 124,
-    price: "₦190,000",
-    basePrice: 190000,
-    unit: "/Night",
-    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=600&auto=format&fit=crop"
-  },
-  {
-    id: 2,
-    title: "Home Cleaning",
-    merchant: "Sparkle Maids",
-    rating: 4.7,
-    reviews: 89,
-    price: "₦15,000",
-    basePrice: 15000,
-    unit: "/Session",
-    image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=600&auto=format&fit=crop"
-  },
-  {
-    id: 3,
-    title: "Web Developer",
-    merchant: "Tech Ninjas",
-    rating: 5.0,
-    reviews: 42,
-    price: "₦250,000",
-    basePrice: 250000,
-    unit: "/Hour",
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=600&auto=format&fit=crop"
-  },
-  {
-    id: 4,
-    title: "Bridal Make-Up",
-    merchant: "Glam by Sarah",
-    rating: 4.8,
-    reviews: 210,
-    price: "₦85,000",
-    basePrice: 85000,
-    unit: "/Session",
-    image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=600&auto=format&fit=crop"
-  },
-  {
-    id: 5,
-    title: "Transport Goods",
-    merchant: "Logistics Pro",
-    rating: 4.6,
-    reviews: 315,
-    price: "₦45,000",
-    basePrice: 45000,
-    unit: "/Trip",
-    image: "https://images.unsplash.com/photo-1586528116311-ad8ed7c50800?q=80&w=600&auto=format&fit=crop"
-  },
-  {
-    id: 6,
-    title: "Mobile Car Detailing",
-    merchant: "AutoShine",
-    rating: 4.8,
-    reviews: 142,
-    price: "₦35,000",
-    basePrice: 35000,
-    unit: "/Session",
-    image: "https://images.unsplash.com/photo-1601362840469-51e4d8d58785?q=80&w=600&auto=format&fit=crop"
-  },
-  {
-    id: 7,
-    title: "Professional Headshot Photography",
-    merchant: "LensCraft",
-    rating: 4.9,
-    reviews: 78,
-    price: "₦50,000",
-    basePrice: 50000,
-    unit: "/Hour",
-    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=600&auto=format&fit=crop"
-  },
-  {
-    id: 8,
-    title: "Dog Walking",
-    merchant: "PetPals",
-    rating: 4.7,
-    reviews: 204,
-    price: "₦5,000",
-    basePrice: 5000,
-    unit: "/Session",
-    image: "https://images.unsplash.com/photo-1536551817105-950293dbbaeb?q=80&w=600&auto=format&fit=crop"
-  },
-  {
-    id: 9,
-    title: "Furniture Assembly",
-    merchant: "FixItRight",
-    rating: 4.6,
-    reviews: 312,
-    price: "₦15,000",
-    basePrice: 15000,
-    unit: "/Item",
-    image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=600&auto=format&fit=crop"
-  },
-  {
-    id: 10,
-    title: "Personal Trainer",
-    merchant: "FitPro",
-    rating: 5.0,
-    reviews: 95,
-    price: "₦20,000",
-    basePrice: 20000,
-    unit: "/Hour",
-    image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=600&auto=format&fit=crop"
-  }
-];
+const categories = ["All", ...new Set(services.map(service => service.category))];
 
 export default function ServicesCatalog() {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -179,10 +69,10 @@ export default function ServicesCatalog() {
       </div>
 
       {/* Filter and Sorting Strip */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sticky top-0 bg-[#FAFAFA]/95 backdrop-blur-md z-10 py-2">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 sticky top-0 bg-[#FAFAFA]/95 backdrop-blur-md z-10 py-2">
         
         {/* Categories */}
-        <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide whitespace-nowrap pb-2 md:pb-0">
+        <div className="flex min-w-0 items-center gap-2 overflow-x-auto scrollbar-hide whitespace-nowrap pb-2 md:pb-0">
           {categories.map((cat) => (
             <button
               key={cat}
@@ -214,7 +104,7 @@ export default function ServicesCatalog() {
 
       {/* Services Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {services.map((service) => (
+        {services.filter(service => activeCategory === "All" || service.category === activeCategory).map((service) => (
           <div key={service.id} className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-md transition-shadow group flex flex-col">
             
             {/* Image */}
@@ -243,10 +133,10 @@ export default function ServicesCatalog() {
 
               <div className="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
                 <div>
-                  <span className="font-bold text-[#1E232A] text-lg">{service.price}</span>
-                  <span className="text-gray-500 text-xs ml-1">{service.unit}</span>
+                  <span className="font-bold text-[#1E232A] text-lg">{formatMoney(service.rate)}</span>
+                  <span className="text-gray-500 text-xs ml-1">/{unitLabels[service.billingUnit]}</span>
                 </div>
-                <Link to={`/services/${service.id}`} state={{ service }} className="bg-primary hover:bg-[#b5e032] text-[#1E232A] font-medium px-4 py-2 rounded-xl text-sm transition-colors">
+                <Link to={`/services/${service.id}`} className="bg-primary hover:bg-[#b5e032] text-[#1E232A] font-medium px-4 py-2 rounded-xl text-sm transition-colors">
                   Book Now
                 </Link>
               </div>

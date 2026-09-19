@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function MobileFAB() {
   const [isOpen, setIsOpen] = useState(false);
+  const { pathname } = useLocation();
+  if (/^\/(services\/|booking|checkout|campaigns\/create\/service)/.test(pathname)) return null;
 
   return (
     <div className="md:hidden">

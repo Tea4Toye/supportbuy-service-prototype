@@ -4,7 +4,7 @@ const navItems = [
   { name: "Home", icon: "home", path: "/" },
   { name: "Campaigns", icon: "favorite", path: "/campaigns" },
   { name: "Store", icon: "shopping_bag", path: "/shop" },
-  { name: "Bookings", icon: "menu_book", path: "/services" },
+  { name: "Bookings", icon: "menu_book", path: "/orders" },
   { name: "Profile", icon: "account_circle", path: "/profile" },
 ];
 

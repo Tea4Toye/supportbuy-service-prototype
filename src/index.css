@@ -22,3 +22,28 @@ body {
     display: none;
   }
 }
+
+/* The booking dialog is portalled directly into body, so only its contents print. */
+@media print {
+  body:has(.booking-print[open]) {
+    background: white;
+    color: #1E232A;
+  }
+  body:has(.booking-print[open]) > :not(.booking-print) {
+    display: none !important;
+  }
+  .booking-print[open] {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+  }
+  .booking-print::backdrop { display: none; }
+  .booking-print > div { box-shadow: none; overflow: visible; }
+  .booking-print .modal-actions { display: none !important; }
+}
